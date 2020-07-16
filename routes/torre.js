@@ -73,4 +73,33 @@ router.post("/next-jobs", auth, async (req, res) => {
   }
 });
 
+router.post("/job-details", auth, async (req, res) => {
+  try {
+    const { id } = req.body;
+
+    const detailsURL = TORRE.GET_JOB_DETAILS(id);
+    const details = await axios.get(
+      detailsURL,
+      {},
+      {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = details.data
+
+    console.log('********data', data)
+    
+    res.send(data);
+  } catch (error) {
+    console.log(error);
+    return res.status(400).json(error);
+  }
+});
+
+
+(id) => ``
+
 module.exports = router;
