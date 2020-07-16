@@ -16,13 +16,11 @@ router.post("/signup", async (req, res) => {
     res.status(201).json({user, token})
     
   } catch (error) {
-      console.log(error)
    return res.status(400).json(error);
   }
 });
 
 router.post("/signin", async (req, res) => {
-    console.log(req.body);
   try {
     const { email, password } = req.body;
 

@@ -28,7 +28,6 @@ router.post("/matching", auth, async (req, res) => {
     const strengths = user.data.strengths
 
     const updatedJobs = addMatchStatus(jobsList, strengths)
-    console.log('udatedJos', updatedJobs)
 
     jobs.data.results = updatedJobs
 
@@ -39,7 +38,6 @@ router.post("/matching", auth, async (req, res) => {
     };
     res.send(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 });
@@ -62,13 +60,11 @@ router.post("/next-jobs", auth, async (req, res) => {
     const data = jobs.data
 
     const updatedJobs = addMatchStatus(data.results, strengths)
-    console.log('udatedJos', updatedJobs)
 
     data.results = updatedJobs
     
     res.send(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 });
@@ -89,17 +85,12 @@ router.post("/job-details", auth, async (req, res) => {
     );
 
     const data = details.data
-
-    console.log('********data', data)
     
     res.send(data);
   } catch (error) {
-    console.log(error);
     return res.status(400).json(error);
   }
 });
 
-
-(id) => ``
 
 module.exports = router;
