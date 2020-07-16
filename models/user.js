@@ -5,10 +5,6 @@ const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
-      type: String,
-      trim: true,
-    },
     email: {
       type: String,
       required: true,
@@ -24,28 +20,7 @@ const UserSchema = new mongoose.Schema(
       type: String,
       minlength: 8,
     },
-    platform: {
-      type: String,
-      trim: true,
-    },
-    shopDomain: {
-      type: String,
-      trim: true,
-    },
-    fbToken: {
-      type: String,
-    },
-    fbExpires: {
-      type: Date,
-    },
-    searchCount: {
-      type: Number,
-      default: 0,
-    },
-    plan: {
-      type: String,
-      default: "PL001",
-    },
+
     tokens: [
       {
         token: {
@@ -60,20 +35,12 @@ const UserSchema = new mongoose.Schema(
   }
 );
 
-UserSchema.virtual("shops", {
-  ref: "Shop",
-  localField: "_id",
-  foreignField: "owner",
-});
-
 UserSchema.methods.generateAuthToken = async function () {
   const user = this;
   const token = jwt.sign(
     {
       _id: user._id.toString(),
-      name: user.name,
       email: user.email,
-      domain: user.shopDomain,
     },
     process.env.JWT_SECRET
   );
