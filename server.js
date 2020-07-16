@@ -4,6 +4,7 @@ var cors = require('cors')
 require("./db/mongoose");
 
 const authRoutes = require('./routes/auth')
+const torreRoutes = require('./routes/torre')
 
 const app = express()
 const PORT = 5000
@@ -11,6 +12,7 @@ const PORT = 5000
 app.use(cors())
 app.use(bodyParser.json());
 app.use(authRoutes)
+app.use(torreRoutes)
 
 app.get('/', (req, res) => {
     res.send('App is up')
