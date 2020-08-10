@@ -5,11 +5,25 @@ const auth = require("../middlewares/authenticate");
 
 router.post("/signup", async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = new User({
-      email,
+    console.log('body',req.body)
+    const { name, password, teacherCode, schoolCode, role, studentCode } = req.body;
+    const userObject = {
+      name,
       password,
-    });
+      teacherCode,
+      schoolCode,
+      studentCode,
+      role
+    }
+    if(role === "student") {
+      delete userObject.teacherCode 
+    }
+
+    if(role === "teacher"){
+      delete userObject.studentCode
+    }
+
+    const user = new User(userObject);
 
     const token = await user.generateAuthToken();
     await user.save();
@@ -22,9 +36,9 @@ router.post("/signup", async (req, res) => {
 
 router.post("/signin", async (req, res) => {
   try {
-    const { email, password } = req.body;
+    const { code, password, role } = req.body;
 
-      const user = await User.findByCredentials(email, password)
+      const user = await User.findByCredentials(code, password, role)
       const token = await user.generateAuthToken()
 
     res.status(200).json({user, token})

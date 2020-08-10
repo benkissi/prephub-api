@@ -1,34 +1,26 @@
 const mongoose = require("mongoose");
+const validator = require("validator");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 
 const UserSchema = new mongoose.Schema(
   {
-    name: {
+    email: {
       type: String,
       required: true,
       trim: true,
+      unique: true,
+      validate(value) {
+        if (!validator.isEmail(value)) {
+          throw new Error("Email is invalid");
+        }
+      },
     },
     password: {
       type: String,
-      required: true,
-      minlength: 7,
+      minlength: 8,
     },
-    teacherCode: {
-      type: String,
-      minlength: 7,
-    },
-    studentCode: {
-      type: String,
-      minlength: 7,
-    },
-    schoolCode: {
-      type: String,
-      minlength: 7,
-    },
-    role: {
-      type: String,
-    },
+
     tokens: [
       {
         token: {
@@ -48,7 +40,7 @@ UserSchema.methods.generateAuthToken = async function () {
   const token = jwt.sign(
     {
       _id: user._id.toString(),
-      name: user.name,
+      email: user.email,
     },
     process.env.JWT_SECRET
   );
@@ -85,11 +77,13 @@ UserSchema.pre("save", function (next) {
   }
 });
 
-UserSchema.statics.findByCredentials = async function (code, password, role) {
+UserSchema.statics.findByCredentials = async function (email, password) {
   var User = this;
 
+  // const user = await User.findOne({email: email})
+  // console.log('resolve', user)
 
-  return User.findOne({ [`${role}Code`] : code }).then((user) => {
+  return User.findOne({ email }).then((user) => {
     if (!user) {
       return Promise.reject();
     }
